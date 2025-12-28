@@ -19,17 +19,18 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 
-const  MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
-main()
+const dbUrl = process.env.MONGO_URI;
+
+async function main() {
+    await mongoose.connect(dbUrl);
+}main()
     .then(() => {
     console.log("connected to DB");
     })
     .catch((err) => {
         console.log(err);
     });
-async function main() {
-    await mongoose.connect(MONGO_URL)
-}
+
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended : true}))
@@ -41,8 +42,9 @@ const sessionOptions= {
     resave: false,
     saveUninitialized: true,
     cookie: {
-        expires:Date.now()+7*24*60+100,
-        maxAge: 7*24*60*60*100,
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+
         httpOnly:true,
     },
 };
@@ -90,6 +92,8 @@ app.use((err, req, res, next) => {
 });
 
 
-app.listen(8080, () =>{
-    console.log("server is listening to port 8080");
+const PORT = process.env.PORT || 8080;
+
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
