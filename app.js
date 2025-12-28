@@ -21,15 +21,7 @@ const userRouter = require("./routes/user.js");
 
 const dbUrl = process.env.MONGO_URI;
 
-async function main() {
-    await mongoose.connect(dbUrl);
-}main()
-    .then(() => {
-    console.log("connected to DB");
-    })
-    .catch((err) => {
-        console.log(err);
-    });
+
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -75,6 +67,9 @@ app.use((req, res, next) =>{
 //     let registeredUser = await User.register(fakeUser, "helloworld");
 //     res.send(registeredUser);
 // }); 
+app.get("/", (req, res) => {
+    res.redirect("/signup");
+});
 app.use("/", userRouter);                   
 app.use("/listings", listingRouter);       
 app.use("/listings/:id/reviews", reviewRouter);  
